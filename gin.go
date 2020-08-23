@@ -260,7 +260,7 @@ func (engine *Engine) addRoute(method, path string, handlers HandlersChain) {
 	debugPrintRoute(method, path, handlers)
 
 	root := engine.trees.get(method)
-	if root == nil {
+ 	if root == nil {
 		root = new(node)
 		root.fullPath = "/"
 		engine.trees = append(engine.trees, methodTree{method: method, root: root})
@@ -389,6 +389,7 @@ func (engine *Engine) HandleContext(c *Context) {
 	c.index = oldIndexValue
 }
 
+//请求入口处理核心方法
 func (engine *Engine) handleHTTPRequest(c *Context) {
 	httpMethod := c.Request.Method
 	rPath := c.Request.URL.Path

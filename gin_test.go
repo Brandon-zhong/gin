@@ -440,6 +440,7 @@ func TestListOfRoutes(t *testing.T) {
 	router := New()
 	router.GET("/favicon.ico", handlerTest1)
 	router.GET("/", handlerTest1)
+
 	group := router.Group("/users")
 	{
 		group.GET("/", handlerTest2)
@@ -476,6 +477,8 @@ func TestListOfRoutes(t *testing.T) {
 		Path:    "/users/:id",
 		Handler: "^(.*/vendor/)?github.com/gin-gonic/gin.handlerTest2$",
 	})
+
+	router.Run("localhost:8080")
 }
 
 func TestEngineHandleContext(t *testing.T) {

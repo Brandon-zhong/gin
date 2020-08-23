@@ -275,9 +275,11 @@ func findWildcard(path string) (wildcard string, i int, valid bool) {
 	return "", -1, false
 }
 
+//插入子节点,
 func (n *node) insertChild(path string, fullPath string, handlers HandlersChain) {
 	for {
 		// Find prefix until first wildcard
+		//查找前缀通配符, 没有前缀通配符的将推出循环，直接之后后
 		wildcard, i, valid := findWildcard(path)
 		if i < 0 { // No wildcard found
 			break

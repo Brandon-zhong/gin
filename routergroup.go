@@ -39,6 +39,7 @@ type IRoutes interface {
 // RouterGroup is used internally to configure router, a RouterGroup is associated with
 // a prefix and an array of handlers (middleware).
 type RouterGroup struct {
+	//handler函数的数组
 	Handlers HandlersChain
 	basePath string
 	engine   *Engine
@@ -69,8 +70,11 @@ func (group *RouterGroup) BasePath() string {
 	return group.basePath
 }
 
+//添加路由
 func (group *RouterGroup) handle(httpMethod, relativePath string, handlers HandlersChain) IRoutes {
+	//计算指定uri的绝对路径，其实就是和group的rootPath拼接起来
 	absolutePath := group.calculateAbsolutePath(relativePath)
+	//合并handler
 	handlers = group.combineHandlers(handlers)
 	group.engine.addRoute(httpMethod, absolutePath, handlers)
 	return group.returnObj()
@@ -207,11 +211,13 @@ func (group *RouterGroup) createStaticHandler(relativePath string, fs http.FileS
 	}
 }
 
+//将多个handler合并一下， 当前group的handler数量不能超过63，不然panic
 func (group *RouterGroup) combineHandlers(handlers HandlersChain) HandlersChain {
 	finalSize := len(group.Handlers) + len(handlers)
 	if finalSize >= int(abortIndex) {
 		panic("too many handlers")
 	}
+	//创建新的数组，将旧的handler和新的handler都复制到新的handler上，顺序为添加顺序
 	mergedHandlers := make(HandlersChain, finalSize)
 	copy(mergedHandlers, group.Handlers)
 	copy(mergedHandlers[len(group.Handlers):], handlers)
